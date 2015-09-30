@@ -13,7 +13,7 @@ public class HttpUtil {
 	public static void sendHttpRequest(final String address, 
 			final HttpCallbackListener listener){
 		
-		Log.d("sendHttpRequest", "sendHttpRequest");
+		Log.i("sendHttpRequest", "sendHttpRequest");
 		new Thread(new Runnable() {
 			
 			@Override

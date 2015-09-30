@@ -54,16 +54,15 @@ public class ChooseAreaActivity extends Activity {
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		if(prefs.getBoolean("city_selected", false)){
-			Intent intent = new Intent(this,WeatherActivity.class);
+		if (prefs.getBoolean("city_selected", false)) {
+			Intent intent = new Intent(this, WeatherActivity.class);
 			startActivity(intent);
 			finish();
 			return;
 		}
-		
-		
+
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.choose_area);
 		Log.i("ChooseAreaActivity", "layout.choose_area");
@@ -81,18 +80,15 @@ public class ChooseAreaActivity extends Activity {
 					queryCities();
 					Log.i("ChooseAreaActivity", "queryCities");
 
-
 				} else if (currectLevel == LEVEL_CITY) {
 					selectedCity = cityList.get(index);
 					queryCounties();
 					Log.i("ChooseAreaActivity", "queryCounties");
 
-
-				}
-				else if(currectLevel == LEVEL_COUNTY){
+				} else if (currectLevel == LEVEL_COUNTY) {
 					String countyCode = countyList.get(index).getCountyCode();
 					Intent intent = new Intent(ChooseAreaActivity.this, WeatherActivity.class);
-					intent.putExtra("county_code",countyCode);
+					intent.putExtra("county_code", countyCode);
 					startActivity(intent);
 					finish();
 				}
@@ -105,6 +101,8 @@ public class ChooseAreaActivity extends Activity {
 	 * 查询全国所有的省，先查数据库，没有再查服务器
 	 */
 	private void queryProvinces() {
+		Log.i("ChooseAreaActivity", "queryProvinces");
+
 		provinceList = coolWeatherDB.loadProvinces();
 		if (provinceList.size() > 0) {
 			dataList.clear();
@@ -124,8 +122,9 @@ public class ChooseAreaActivity extends Activity {
 	}
 
 	protected void queryCities() {
-		cityList = coolWeatherDB.loadCities(selectedProvince.getId());
+		Log.i("ChooseAreaActivity", "queryCities");
 
+		cityList = coolWeatherDB.loadCities(selectedProvince.getId());
 		if (cityList.size() > 0) {
 			dataList.clear();
 			for (City city : cityList) {
@@ -137,7 +136,6 @@ public class ChooseAreaActivity extends Activity {
 			listView.setSelection(0);
 			titleText.setText(selectedProvince.getProvinceName());
 			currectLevel = LEVEL_CITY;
-			
 
 		} else {
 			queryFromServer(selectedProvince.getProvinceCode(), "city");
@@ -145,8 +143,8 @@ public class ChooseAreaActivity extends Activity {
 	}
 
 	protected void queryCounties() {
+		Log.i("ChooseAreaActivity", "queryCounties");
 		countyList = coolWeatherDB.loadCounties(selectedCity.getId());
-
 		if (countyList.size() > 0) {
 			dataList.clear();
 			for (County county : countyList) {
@@ -167,6 +165,7 @@ public class ChooseAreaActivity extends Activity {
 	private void queryFromServer(final String code, final String type) {
 		String address;
 		if (!TextUtils.isEmpty(code)) {
+
 			address = "http://www.weather.com.cn/data/list3/city" + code + ".xml";
 			Log.i("queryFromServer1", address);
 		} else {
@@ -213,13 +212,13 @@ public class ChooseAreaActivity extends Activity {
 
 			@Override
 			public void onError(Exception e) {
-				
-				runOnUiThread(new Runnable(){
+
+				runOnUiThread(new Runnable() {
 					@Override
-					public void run(){
+					public void run() {
 						closeProgressDialog();
 						Toast.makeText(ChooseAreaActivity.this, "加载失败", Toast.LENGTH_SHORT).show();
-						
+
 					}
 				});
 			}
@@ -230,7 +229,7 @@ public class ChooseAreaActivity extends Activity {
 	 * 显示进度
 	 */
 	private void showProgressDialog() {
-		if (progressDialog == null){
+		if (progressDialog == null) {
 			progressDialog = new ProgressDialog(this);
 			progressDialog.setMessage("正在加载...");
 			progressDialog.setCanceledOnTouchOutside(false);
@@ -238,35 +237,36 @@ public class ChooseAreaActivity extends Activity {
 		progressDialog.show();
 
 	}
+
 	/*
 	 * 关闭进度
 	 */
 	private void closeProgressDialog() {
-		if(progressDialog!=null){
+		Log.i("ChooseAreaActivity", "closeProgressDialog");
+		if (progressDialog != null) {
 			progressDialog.dismiss();
 		}
 
 	}
-	
+
 	/*
 	 * 捕获back键，根据当前的级别来判断，返回的列表
 	 * 
 	 */
 	@Override
-	public void onBackPressed(){
-		if (currectLevel == LEVEL_COUNTY){
+	public void onBackPressed() {
+		if (currectLevel == LEVEL_COUNTY) {
 			queryCities();
-			
-		}
-		else if (currectLevel == LEVEL_CITY){
+
+		} else if (currectLevel == LEVEL_CITY) {
 			queryProvinces();
-			
+
 		}
 
 		else {
 			finish();
-			
+
 		}
 	}
-	
+
 }

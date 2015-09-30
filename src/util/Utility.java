@@ -22,7 +22,7 @@ public class Utility {
 	 * 解析服务器返回的省级数据
 	 */
 	public synchronized static boolean handleProvincesResponse(CoolWeatherDB coolWeatherDB, String response) {
-		Log.d("handleProvincesResponse", "handleProvincesResponse");
+		Log.i("handleProvincesResponse", "handleProvincesResponse");
 		if (!TextUtils.isEmpty(response)) {
 			String[] allProvinces = response.split(",");
 			if (allProvinces != null && allProvinces.length > 0) {
@@ -48,7 +48,7 @@ public class Utility {
 
 	public synchronized static boolean handleCitiesResponse(CoolWeatherDB coolWeatherDB, String response,
 			int provinceId) {
-		Log.d("handleCitiesResponse", "handleCitiesResponse");
+		Log.i("handleCitiesResponse", "handleCitiesResponse");
 
 		if (!TextUtils.isEmpty(response)) {
 			String[] allCities = response.split(",");
@@ -75,7 +75,7 @@ public class Utility {
 
 	public synchronized static boolean handleCountiesResponse(CoolWeatherDB coolWeatherDB, String response,
 			int cityId) {
-		Log.d("handleCountiesResponse", "handleCountiesResponse");
+		Log.i("handleCountiesResponse", "handleCountiesResponse");
 
 		if (!TextUtils.isEmpty(response)) {
 			String[] allCounties = response.split(",");
